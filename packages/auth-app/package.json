@@ -1,0 +1,78 @@
+{
+  "name": "@octokit/auth-app",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "version": "0.0.0-development",
+  "description": "GitHub App authentication for JavaScript",
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc -p tsconfig.json",
+    "lint": "prettier --check '{src,test,scripts}/**/*.{ts,md}' README.md *.json",
+    "lint:fix": "prettier --write '{src,test,scripts}/**/*.{ts,md}' README.md *.json",
+    "pretest": "npm run -s lint",
+    "test": "vitest run --coverage",
+    "test:ui": "vitest --ui --coverage",
+    "test:typescript": "npx tsc --noEmit --declaration --noUnusedLocals --esModuleInterop --strict --target es2022 --module node16 --moduleResolution node16 --exactOptionalPropertyTypes test/typescript-validate.ts"
+  },
+  "repository": "github:octokit/auth-app.js",
+  "keywords": [
+    "github",
+    "octokit",
+    "authentication",
+    "api"
+  ],
+  "author": "Gregor Martynus (https://github.com/gr2m)",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-kms": "^3.687.0",
+    "@octokit/auth-oauth-app": "^8.1.0",
+    "@octokit/auth-oauth-user": "^5.1.0",
+    "@octokit/request": "^9.1.1",
+    "@octokit/request-error": "^6.1.1",
+    "@octokit/types": "^13.4.1",
+    "lru-cache": "npm:@wolfy1339/lru-cache@^11.0.2-patch.1",
+    "universal-github-app-jwt": "^2.2.0",
+    "universal-user-agent": "^7.0.0"
+  },
+  "devDependencies": {
+    "@octokit/tsconfig": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^2.1.2",
+    "@vitest/ui": "^2.1.2",
+    "esbuild": "^0.24.0",
+    "fetch-mock": "^11.0.0",
+    "glob": "^11.0.0",
+    "prettier": "3.3.3",
+    "semantic-release-plugin-update-version-in-files": "^1.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.1.2"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github",
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "./pkg"
+        }
+      ],
+      [
+        "semantic-release-plugin-update-version-in-files",
+        {
+          "files": [
+            "pkg/dist-web/*",
+            "pkg/dist-node/*",
+            "pkg/*/version.*"
+          ]
+        }
+      ]
+    ]
+  },
+  "engines": {
+    "node": ">= 18"
+  }
+}

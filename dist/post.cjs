@@ -560,10 +560,10 @@ var require_proxy = __commonJS({
       })();
       if (proxyVar) {
         try {
-          return new DecodedURL(proxyVar);
+          return new URL(proxyVar);
         } catch (_a) {
           if (!proxyVar.startsWith("http://") && !proxyVar.startsWith("https://"))
-            return new DecodedURL(`http://${proxyVar}`);
+            return new URL(`http://${proxyVar}`);
         }
       } else {
         return void 0;
@@ -606,19 +606,6 @@ var require_proxy = __commonJS({
       const hostLower = host.toLowerCase();
       return hostLower === "localhost" || hostLower.startsWith("127.") || hostLower.startsWith("[::1]") || hostLower.startsWith("[0:0:0:0:0:0:0:1]");
     }
-    var DecodedURL = class extends URL {
-      constructor(url, base) {
-        super(url, base);
-        this._decodedUsername = decodeURIComponent(super.username);
-        this._decodedPassword = decodeURIComponent(super.password);
-      }
-      get username() {
-        return this._decodedUsername;
-      }
-      get password() {
-        return this._decodedPassword;
-      }
-    };
   }
 });
 
@@ -18153,7 +18140,7 @@ var require_lib = __commonJS({
         }
         const usingSsl = parsedUrl.protocol === "https:";
         proxyAgent = new undici_1.ProxyAgent(Object.assign({ uri: proxyUrl2.href, pipelining: !this._keepAlive ? 0 : 1 }, (proxyUrl2.username || proxyUrl2.password) && {
-          token: `Basic ${Buffer.from(`${proxyUrl2.username}:${proxyUrl2.password}`).toString("base64")}`
+          token: `${proxyUrl2.username}:${proxyUrl2.password}`
         }));
         this._proxyAgentDispatcher = proxyAgent;
         if (usingSsl && this._ignoreSslError) {
@@ -36804,11 +36791,11 @@ var RequestError = class extends Error {
   response;
   constructor(message, statusCode, options) {
     super(message);
-    this.name = "HttpError";
-    this.status = Number.parseInt(statusCode);
-    if (Number.isNaN(this.status)) {
-      this.status = 0;
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
     }
+    this.name = "HttpError";
+    this.status = statusCode;
     if ("response" in options) {
       this.response = options.response;
     }

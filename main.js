@@ -1,7 +1,7 @@
 // @ts-check
 
 import core from "@actions/core";
-import { createAppAuth } from "@octokit/auth-app";
+import { createAppAuth } from "./packages/auth-app/src/index.js";
 
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
